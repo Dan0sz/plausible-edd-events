@@ -8,33 +8,26 @@
  * Plugin URI: https://github.com/Dan0sz/plausible-edd-events
  */
 
-class BrevoHoneypot {
-	/**
-	 * @var string $honeypot_name
-	 */
-	private $honeypot_name;
-	
-	/**
-	 *
-	 */
-	public function __construct() {
-		$this->honeypot_name = apply_filters( 'brevo_honeypot_name', 'come_and_get_it' );
-		
-		/**
-		 * Run before 'mailin', which runs at default priority (10).
-		 */
-		add_action( 'init', [ $this, 'init' ], 9 );
-	}
-	
-	/**
-	 * @return void
-	 */
-	public function init() {
-		if ( ! empty( $_POST[ $this->honeypot_name ] ) ) {
-			$_POST['sib_action']      = 'bot';
-			$_POST['sib_form_action'] = 'bot';
-		}
-	}
-}
+defined( 'ABSPATH' ) || exit;
 
-new BrevoHoneypot();
+/**
+ * Define constants.
+ */
+define( 'PLAUSIBLE_EDD_EVENTS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PLAUSIBLE_EDD_EVENTS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Takes care of loading classes on demand.
+ *
+ * @param $class
+ *
+ * @return mixed|void
+ */
+require_once PLAUSIBLE_EDD_EVENTS_PLUGIN_DIR . 'vendor/autoload.php';
+
+/**
+ * Check if Easy Digital Downloads has loaded yet, and if so, Go!
+ */
+if ( defined( 'EDD_PLUGIN_FILE' ) ) {
+	$plausible_edd_events = new Plausible\EDDEvents\Init();
+}
