@@ -19,7 +19,7 @@ class Init {
 	 * @return void
 	 */
 	private function init() {
-		add_action( 'plugins_loaded', 'load_checkout_script', 501 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'load_checkout_script' ], 501 );
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class Init {
 	 * @return void
 	 */
 	public function load_checkout_script() {
-		if ( ! edd_is_checkout() ) {
+		if ( is_admin() || ! edd_is_checkout() ) {
 			return;
 		}
 		
